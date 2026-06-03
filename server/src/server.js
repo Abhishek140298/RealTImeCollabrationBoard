@@ -6,10 +6,12 @@ const connectDB=require('./config/db')
 const app = express();
 require("dotenv").config();
 const boardRoutes=require("./routes/boardRoute")
+const taskRoutes =require("./routes/taskRoutes")
 
 app.use(cors());
 app.use(express.json());
 app.use("/boards",boardRoutes)
+app.use("/tasks",taskRoutes)
 app.get("/", (req, res) => {
   res.send("Realtime Board Backend Running app");
 });
