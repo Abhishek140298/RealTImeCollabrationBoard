@@ -6,7 +6,6 @@ const getTasksByBoard = async (req, res) => {
     console.log("Is it ")
   try {
     const { boardId } = req.params;
-    console.log("ID",req.params)
     if(!boardId)return res.status(404).json({message:"Please Provide  Board ID"})
     const tasks = await Task.find({ boardId });
     if (!tasks) return res.status(404).json({ message: "Tasks not Found" });
@@ -32,10 +31,22 @@ const createTask = async (req, res) => {
       boardId,
     });
     //* return Document
-    return res.status(201).json(task);
+     res.status(201).json(task);
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+     res.status(500).json({ message: err.message });
   }
 };
+
+const updateTask=async (req,res)=>{
+  try{
+    const {taskId}=req.params
+    const task=Task.findByIdAndUpdate(taskId,req.body,{new:true,runValidator:true})
+    if(!task)return res.status(401).json({message:"Task not Found"})
+     res.status(200).json(task)
+  }
+  catch(err){
+    res.status(500).json({message:"Internal server error"})
+  }
+}
 
 module.exports = { createTask, getTasksByBoard };
