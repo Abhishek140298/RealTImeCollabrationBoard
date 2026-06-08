@@ -49,4 +49,4 @@ const updateTask=async (req,res)=>{
   }
 }
 
-module.exports = { createTask, getTasksByBoard };
+module.exports = { createTask, getTasksByBoard ,updateTask};
