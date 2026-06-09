@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const Task = require("../models/taskModel");
 const Board = require("../models/boardModal");
 const { response } = require("express");
+const {getIO}=require('../sockets/socketManager')
+const {updateTaskEvent} =require("../sockets/socketEvents")
 const getTasksByBoard = async (req, res) => {
     console.log("Is it ")
   try {
@@ -42,11 +44,26 @@ const updateTask=async (req,res)=>{
     const {taskId}=req.params
     const task=Task.findByIdAndUpdate(taskId,req.body,{new:true,runValidator:true})
     if(!task)return res.status(401).json({message:"Task not Found"})
-     res.status(200).json(task)
+    
+     res.status(201).json(task)
+     updateTask(getIO(),task.boardId.toString(),task)
   }
   catch(err){
     res.status(500).json({message:"Internal server error"})
   }
 }
 
-module.exports = { createTask, getTasksByBoard ,updateTask};
+const deleteTask=async(req,res)=>{
+  try{
+     const  {taskId}=req.params
+     const task=await Task.findByIdAndDelete(taskId)
+     if(!task)return res.status(401).json({message:'Task Not Found'})
+      res.status(200).json(task)
+
+  }
+  catch(err){
+    res.status(500).json({message:"Internal Server Error"})
+  }
+}
+
+module.exports = { createTask, getTasksByBoard ,updateTask,deleteTask};

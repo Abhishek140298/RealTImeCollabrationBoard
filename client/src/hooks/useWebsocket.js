@@ -80,3 +80,15 @@
 
  
 
+import {useState,useEffect} from 'react'
+import { io } from "socket.io-client";
+
+const useSocket=(url)=>{
+useEffect(()=>{
+const socket=io('http://localhost:8000')
+socket.emit("joinBoard","Board123")
+},[])
+}
+
+
+export {useSocket}
